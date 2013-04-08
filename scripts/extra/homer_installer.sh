@@ -532,7 +532,7 @@ else
    case "$choice" in 
      y|Y ) 
    	echo "Adding cronjob..."
-   	statistic="/opt/statistic.pl 2>&1> /dev/null"
+   	statistic="/opt/statistic.pl > /dev/null 2>&1"
    	job1="*/5 * * * * $statistic"
    	crontab -l > /opt/cron.tmp
    	echo "$job1" >> /opt/cron.tmp
@@ -548,7 +548,7 @@ else
      y|Y )
            echo "Adding cronjob..."
    	# Set Cron: Partition Rotation 
-   	rotate="/opt/partrotate_unixtimestamp.pl 2>&1> /dev/null"
+   	rotate="/opt/partrotate_unixtimestamp.pl > /dev/null  2>&1"
    	job2="* 0 * * * $rotate"
    	crontab -l > /opt/cron.tmp
    	echo "$job2" >> /opt/cron.tmp
