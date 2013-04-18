@@ -1,7 +1,7 @@
 /*
  *
  *   Postgress SQL Schema for Sipcapture
- *   Author: Ovind Kolbu
+ *   Author: Øyvind Kolbu
  *
 */
 
@@ -43,7 +43,7 @@ CREATE TABLE sip_capture (
         rtp_stat VARCHAR(256) NOT NULL,
         type INTEGER NOT NULL,
         node VARCHAR(125) NOT NULL,
-        msg VARCHAR(1500) NOT NULL,
+        msg TEXT NOT NULL,
         PRIMARY KEY (id,date)
 );
 
