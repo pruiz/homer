@@ -680,8 +680,14 @@ $(document).ready(function(){
     <input id="z2" type="button" value="-" onclick="$('#image<?php echo $winid; ?>').zoomable('zoomOut')" title="Zoom out"  style="background: transparent;" />
     <input id="r1" type="button" value="Reset" onclick="$('#image<?php echo $winid; ?>').zoomable();$('#image<?php echo $winid; ?>').width('<?php echo $size_x;?>').height('<?php echo $size_y;?>');"  style="background: transparent;" />
 <!--    <input id="s1" type="button" class="ui-state-default ui-corner-all" value="PNG" onclick="window.open('utils.php?task=saveit&cflow=<?php echo $file?>');"  style="background: transparent;"  /> -->
+<?php  if (isset($full) && $full == 1) { ?>
+    <input id="s2" type="button" value="PCAP" onclick="window.open('pcap.php?<?php echo $pcapurl; ?>&b2b=1');" style="background: transparent;"/>
+    <input id="s3" type="button" value="TEXT" onclick="window.open('pcap.php?<?php echo $pcapurl; ?>&b2b=1&text=1');" style="background: transparent;"/>
+<?php } else {  ?>
     <input id="s2" type="button" value="PCAP" onclick="window.open('pcap.php?<?php echo $pcapurl; ?>');" style="background: transparent;"/>
     <input id="s3" type="button" value="TEXT" onclick="window.open('pcap.php?<?php echo $pcapurl; ?>&text=1');" style="background: transparent;"/>
+<?php   }  ?>
+
 <?php  if (isset($flow_from_date)) { ?>
     <input type="button" value="Duration: <?php echo $totdur ?>" style="opacity: 1; background: transparent; background-color: <?php echo $statuscolor; ?>" disabled />
     <input type="button" value="Expand Search" style="opacity: 1; background: transparent;" onclick="$(this).parent().parent().load('cflow.php?<?php echo $complete_url ?>&full=1');"/>
