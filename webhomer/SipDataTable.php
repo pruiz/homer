@@ -692,31 +692,6 @@ class SipDataTable extends DataTable_DataTable
     			return nRow;
             }
     ";
-
-    return "
-            function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-
-    			/* Bold the grade for all 'A' grade browsers */
-    			if ( aData[{$this->getColumnIndexByName('id')}] == 'A' )
-    			{
-    				$('td:eq({$this->getColumnIndexByName('id')})', nRow).html( '<b>A</b>' );
-    			}
-                        
-			/* Colour by CALLID */    	
-                        var callid = aData[{$this->getColumnIndexByName('callid')}];
-    			if(initColors[callid] === undefined) {
-                            var r = Math.floor(Math.random()*256+100);
-                            var g = Math.floor(Math.random()*256+100);
-                            var b = Math.floor(Math.random()*256+100);
-                            initColors[callid]='rgb('+r+','+g+','+b+')';
-    			} 
-
-                        $(nRow).css('background-color',initColors[callid]);
-    			return nRow;
-            }
-    ";
-
-  return $vcall;
   }
 
 // border-top: 0; border-bottom: 1px solid #f5f5f5; border-left: 1px solid #f5f5f5; border-right: 1px solid #f5f5f5;
