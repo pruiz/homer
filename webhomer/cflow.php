@@ -163,7 +163,14 @@ if(!$db->dbconnect_homer(isset($mynodes[$location[0]]) ? $mynodes[$location[0]] 
                         break;		
 	       case "b2b":
 				if (!preg_match("/%/", $value.BLEGTAIL) || defined('WILDCARDON')){ /*mysql wildcard % not supported*/
-                        		$cid_aleg = $cid.BLEGTAIL;
+					// check if reverse B2b
+					if (  strlen($cid) > strlen(BLEGTAIL) &&
+                                              strpos($cid, BLEGTAIL, strlen($cid) - strlen(BLEGTAIL)) !== false ) {
+                                                $cid_aleg = chop($cid, BLEGTAIL);
+                                        }  else {
+                                                $cid_aleg = $cid.BLEGTAIL;
+                                        }
+
 				}
 
            }
