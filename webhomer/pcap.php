@@ -195,7 +195,7 @@ if(isset($cid_array)) {
 	    	}
 	    }
 	    else if (BLEGCID == "b2b") { 
-	    	if (!preg_match("/%/", $value.BLEGTAIL)){/*mysql wildcard % not supported*/
+	    	if (!preg_match("/%/", $value.BLEGTAIL) || defined('WILDCARDON')){ /*mysql wildcard % not supported*/
 	          	$cid_aleg = $cid.BLEGTAIL;
 	          	$cid_array[] = $cid_aleg;
 	    	}

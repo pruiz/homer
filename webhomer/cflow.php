@@ -162,7 +162,9 @@ if(!$db->dbconnect_homer(isset($mynodes[$location[0]]) ? $mynodes[$location[0]] 
 		               	}                       			
                         break;		
 	       case "b2b":
-                        	$cid_aleg = $cid.BLEGTAIL;
+				if (!preg_match("/%/", $value.BLEGTAIL) || defined('WILDCARDON')){ /*mysql wildcard % not supported*/
+                        		$cid_aleg = $cid.BLEGTAIL;
+				}
 
            }
 
