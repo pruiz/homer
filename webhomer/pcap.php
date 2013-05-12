@@ -226,7 +226,7 @@ foreach($location as $value) {
 	            
 	            $local_where = $where." ( callid = '".$cid."' )";                               
                     /* Append B-LEG if set */
-                    if ($b2b == 1) {
+                    if (BLEGCID && $full == 1 && $b2b == 1) {
                                 $eqlike = preg_match("/%/", $cid_aleg) ? " like " : " = ";
                                 $local_where .= " OR (callid".$eqlike."'".$cid_aleg."')";
                     }
@@ -337,6 +337,8 @@ foreach($results as $val) {
 }
 
 $pcapfile="HOMER_$fileid";
+if (BLEGCID && $full == 1 && $b2b == 1) { $pcapfile .= "_B2B"; }
+
 $pcapfile .= $text ? ".txt" : ".pcap";
 
 // Check if local PCAP or CSHARK enabled
