@@ -699,7 +699,7 @@ $(document).ready(function(){
 
 <?php  if (isset($flow_from_date)) { ?>
     <input type="button" value="Duration: <?php echo $totdur ?>" style="opacity: 1; background: transparent; background-color: <?php echo $statuscolor; ?>" disabled />
-    <input type="button" value="Expand Search" style="opacity: 1; background: transparent;" onclick="$(this).parent().parent().load('cflow.php?<?php echo $complete_url ?>&full=1');"/>
+    <input type="button" value="Expand Search" style="opacity: 1; background: transparent;" onclick="$(this).parent().parent().load('cflow.php?<?php echo $complete_url ?>&full=1');$('#image<?php echo $winid;?>').attr('src', './images/search.gif');"/>
 <?php } else {  ?>
     <input type="button" value="Duration: <?php echo $totdur ?>" style="opacity: 1; background: transparent; background-color: <?php echo $statuscolor; ?>" disabled />
 <?php   }  ?>
