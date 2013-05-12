@@ -135,7 +135,8 @@ if (!isset($table)) { $table="sip_capture"; }
 //$cid="1234567890";
 
 // Get Variables
-$b2b = getVar('b2b', NULL, 'get', 'string');
+$b2b = getVar('b2b', NULL, 'get', 'int');
+$full = getVar('full', NULL, 'get', 'int');
 $from_user = getVar('from_user', NULL, 'get', 'string');
 $to_user = getVar('to_user', NULL, 'get', 'string');
 $limit = getVar('limit', NULL, 'get', 'string');
@@ -161,7 +162,7 @@ if(!$db->dbconnect_homer(isset($mynodes[$location[0]]) ? $mynodes[$location[0]] 
     exit;
 }
 
-if(BLEGDETECT == 1) $b2b = 1;
+if(BLEGDETECT == 1 || $full === 1 ) $b2b = 1;
 
 if (isset($flow_to_date, $flow_from_time, $flow_to_time))
 {
@@ -224,7 +225,12 @@ foreach($location as $value) {
 	        foreach($cid_array as $cid) {
 	            
 	            $local_where = $where." ( callid = '".$cid."' )";                               
-	            
+                    /* Append B-LEG if set */
+                    if ($b2b == 1) {
+                                $eqlike = preg_match("/%/", $cid_aleg) ? " like " : " = ";
+                                $local_where .= " OR (callid".$eqlike."'".$cid_aleg."')";
+                    }
+
 	            $query = "SELECT *, ".$tnode
 	                     ."\n FROM ".$tablename
 	                     ."\n WHERE ".$local_where." order by micro_ts ASC limit ".$limit;
