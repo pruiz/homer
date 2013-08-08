@@ -391,6 +391,7 @@ if (CSHARK == 1 && !$text) {
     header("Content-Disposition: filename=\"".$pcapfile."\"");
     header("Content-length: $fsize");
     header("Cache-control: private"); 
+    if(ob_get_length()) ob_clean();
     echo $buf;
     exit;
 
