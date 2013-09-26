@@ -108,7 +108,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libexecdir}/*
 %{_sysconfdir}/captagent/captagent.ini
 %dir %attr(755,apache,apache) %{webroot}/webhomer/tmp
-%dir %attr(755,apache,apache) %{webroot}/webhomer/tmp/colors
+%attr(755,apache,apache) %{webroot}/webhomer/tmp/colors
 %{webroot}/webhomer/modules/*
 %{webroot}/webhomer/php-sip/*
 %{webroot}/webhomer/js/*
