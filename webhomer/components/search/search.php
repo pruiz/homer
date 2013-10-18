@@ -135,6 +135,26 @@ class Component {
                   //$search['max_records'] = $timeparam->max_records = getVar('max_records', 100, $_REQUEST, 'int');
                   $search['unique'] = $unique = getVar('unique', 0, $_REQUEST, 'int');
 
+                  if(isset($search['from_date']) && isset($search['from_time']))
+                  {
+
+                    // Add a search window if specified
+                    $window = getVar('search_window', '', $_REQUEST, 'string');
+
+                    if(is_numeric($window))
+                    {
+                        $fromtimestamp = strtotime($search['from_date'].' '.$search['from_time'])-(60*($window/2));
+                        $totimestamp = strtotime($search['from_date'].' '.$search['from_time'])+(60*($window/2));
+                        
+                        $search['from_date'] = $timeparam->from_date = date('d-m-Y', $fromtimestamp);
+                        $search['from_time'] = $timeparam->from_time = date('h:i:s', $fromtimestamp);
+                        $search['to_date'] = $timeparam->to_date = date('d-m-Y', $totimestamp);
+                        $search['to_time'] = $timeparam->to_time = date('h:i:s', $totimestamp);
+                       
+                    }
+
+                  }
+
                   $ft = date("Y-m-d H:i:s", strtotime($timeparam->from_date." ".$timeparam->from_time));
                   $tt = date("Y-m-d H:i:s", strtotime($timeparam->to_date." ".$timeparam->to_time));	
                   $fhour = date("H", strtotime($timeparam->from_date." ".$timeparam->from_time));
