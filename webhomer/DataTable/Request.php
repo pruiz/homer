@@ -221,7 +221,7 @@ class DataTable_Request
     $searchCols = array();
     
     for($x=0; $x <26; $x++){
-        $value = $request['sSearch_' . $x];
+        isset($request['sSearch_'.$x]) ? $value = $request['sSearch_' . $x] : $value = null;
         if(!(is_null($value) || $value == "")) {    
                 $searchCols[$x] = $value;                
       }
