@@ -67,7 +67,7 @@ $component = getVar('component', 'search', $_REQUEST, 'string');
 if( !empty($_SESSION['userlevel']) )
     $userlevel =  $_SESSION['userlevel'];
 else
-    $userlevel = 'default';
+    $userlevel = '3';
 $header =  getVar('component', 0, $_REQUEST, 'int');
 
 
@@ -143,17 +143,26 @@ foreach($components as $key=>$value) {
 
 /* AUTH */
 if($component == "login" && $task == "do") {
-	if($auth->login($_REQUEST['username'], $_REQUEST['password']) == true){
-	        header("Location: index.php?component=search\n\n");
-        	exit;
-	}
+
+    if(defined(NOLOGIN) && !isset($_REQUEST['password'])) {
+        $_SESSION['loggedin'] = 'User';
+        $_SESSION['userlevel'] = '4';
+    } else {
+	   if($auth->login($_REQUEST['username'], $_REQUEST['password']) == true){
+	           header("Location: index.php?component=search\n\n");
+            	exit;
+	   }
+    }     
 }
 
-//if((!defined("SKIPAUTH") || $component != "login") && $auth->logincheck() == false){
-if($auth->logincheck() == false){
-  if((!defined('SKIPCFLOWAUTH') || SKIPCFLOWAUTH == 0) && preg_match('/(cflow.php|pcap.php)$/', $_SERVER['PHP_SELF'])) die('Login at first');
-	$component = "login";	
-	$security = 1;
+
+
+if(!defined(NOLOGIN) || $component == 'forcelogin') {
+    if($auth->logincheck() == false){
+      if((!defined('SKIPCFLOWAUTH') || SKIPCFLOWAUTH == 0) && preg_match('/(cflow.php|pcap.php)$/', $_SERVER['PHP_SELF'])) die('Login at first');
+    	$component = "login";	
+    	$security = 1;
+    }
 }
 
 /* Some extra functions  */
