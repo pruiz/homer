@@ -37,7 +37,7 @@ define('FORMAT_DATE_RESULT', "H:i:s"); /* Controls the Date/Time output in searc
 /* BLEG DETECTION */
 define('BLEGDETECT', 0); /* always detect BLEG leg in CFLOW/PCAP*/
 define('BLEGCID', "x-cid"); /* options: x-cid, b2b */
-define('BLEGTAIL', "-0"); /* session-ID correlation suffix, required for b2b mode */
+define('BLEGTAIL', "-0"); /* session-ID correlation suffix, required for b2b mode (wildcard% NOT supported, define('WILDCARDON') to enable at performance loss) */
 
 /* Database: mysql */
 define('DATABASE',"mysql");

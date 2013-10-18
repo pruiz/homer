@@ -161,7 +161,7 @@ if(!$db->dbconnect_homer(isset($mynodes[$location[0]]) ? $mynodes[$location[0]] 
     exit;
 }
 
-if(BLEGDETECT == 1) $b2b = 1;
+if(BLEGDETECT == 1 || $full === 1 ) $b2b = 1;
 
 if (isset($flow_to_date, $flow_from_time, $flow_to_time))
 {
@@ -194,8 +194,15 @@ if(isset($cid_array)) {
 	    	}
 	    }
 	    else if (BLEGCID == "b2b") { 
-	    	if (!preg_match("/%/", $value.BLEGTAIL)){/*mysql wildcard % not supported*/
-	          	$cid_aleg = $cid.BLEGTAIL;
+	    	if (!preg_match("/%/", $value.BLEGTAIL) || defined('WILDCARDON')){ /*mysql wildcard % not supported*/
+			 // check if reverse B2b
+                         if (  strlen($cid) > strlen(BLEGTAIL) &&
+                               strpos($cid, BLEGTAIL, strlen($cid) - strlen(BLEGTAIL)) !== false ) {
+                                   $cid_aleg = chop($cid, BLEGTAIL);
+                         }  else {
+                                   $cid_aleg = $cid.BLEGTAIL;
+                         }
+
 	          	$cid_array[] = $cid_aleg;
 	    	}
             }
@@ -224,7 +231,12 @@ foreach($location as $value) {
 	        foreach($cid_array as $cid) {
 	            
 	            $local_where = $where." ( callid = '".$cid."' )";                               
-	            
+                    /* Append B-LEG if set */
+                    if (BLEGCID && $full == 1 && $b2b == 1) {
+                                $eqlike = preg_match("/%/", $cid_aleg) ? " like " : " = ";
+                                $local_where .= " OR (callid".$eqlike."'".$cid_aleg."')";
+                    }
+
 	            $query = "SELECT *, ".$tnode
 	                     ."\n FROM ".$tablename
 	                     ."\n WHERE ".$local_where." order by micro_ts ASC limit ".$limit;
@@ -331,6 +343,8 @@ foreach($results as $val) {
 }
 
 $pcapfile="HOMER_$fileid";
+if (BLEGCID && $full == 1 && $b2b == 1) { $pcapfile .= "_B2B"; }
+
 $pcapfile .= $text ? ".txt" : ".pcap";
 
 // Check if local PCAP or CSHARK enabled
@@ -376,6 +390,7 @@ if (CSHARK == 1 && !$text) {
     header("Content-Disposition: filename=\"".$pcapfile."\"");
     header("Content-length: $fsize");
     header("Cache-control: private"); 
+    if(ob_get_length()) ob_clean();
     echo $buf;
     exit;
 

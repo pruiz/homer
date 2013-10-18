@@ -33,7 +33,7 @@
 #
 
 
-VERSION=0.6.5
+VERSION=0.6.6
 HOSTNAME=$(hostname)
 
 clear; 
@@ -417,7 +417,7 @@ fi
    fi
    if [ "$sqlhomerpassword" = "" ] ; then
    	echo "Using random password... "
-   	sqlhomerpassword=$(cat /dev/urandom|tr -dc "a-zA-Z0-9-_\$\?"|fold -w 9|head -n 1)
+   	sqlhomerpassword=$(cat /dev/urandom|tr -dc "a-zA-Z0-9"|fold -w 9|head -n 1)
    fi
 
    # Create MySQL Databases & Import schemas
@@ -532,8 +532,8 @@ else
    case "$choice" in 
      y|Y ) 
    	echo "Adding cronjob..."
-   	statistic="/opt/statistic.pl 2>&1> /dev/null"
-   	job1="5 * * * * sudo $statistic"
+   	statistic="/opt/statistic.pl > /dev/null 2>&1"
+   	job1="*/5 * * * * $statistic"
    	crontab -l > /opt/cron.tmp
    	echo "$job1" >> /opt/cron.tmp
    	CRON=$(cat /opt/cron.tmp | crontab -)
@@ -548,8 +548,8 @@ else
      y|Y )
            echo "Adding cronjob..."
    	# Set Cron: Partition Rotation 
-   	rotate="/opt/partrotate_unixtimestamp.pl 2>&1> /dev/null"
-   	job2="* 0 * * * sudo $rotate"
+   	rotate="/opt/partrotate_unixtimestamp.pl > /dev/null  2>&1"
+   	job2="* 0 * * * $rotate"
    	crontab -l > /opt/cron.tmp
    	echo "$job2" >> /opt/cron.tmp
    	CRON=$(cat /opt/cron.tmp | crontab - )

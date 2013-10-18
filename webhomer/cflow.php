@@ -163,7 +163,16 @@ if(!$db->dbconnect_homer(isset($mynodes[$location[0]]) ? $mynodes[$location[0]] 
 		               	}                       			
                         break;		
 	       case "b2b":
-                        	$cid_aleg = $cid.BLEGTAIL;
+				if (!preg_match("/%/", $value.BLEGTAIL) || defined('WILDCARDON')){ /*mysql wildcard % not supported*/
+					// check if reverse B2b
+					if (  strlen($cid) > strlen(BLEGTAIL) &&
+                                              strpos($cid, BLEGTAIL, strlen($cid) - strlen(BLEGTAIL)) !== false ) {
+                                                $cid_aleg = chop($cid, BLEGTAIL);
+                                        }  else {
+                                                $cid_aleg = $cid.BLEGTAIL;
+                                        }
+
+				}
 
            }
 
@@ -687,7 +696,7 @@ $(document).ready(function(){
     <input id="s3" type="button" value="TEXT" onclick="window.open('<?php echo APILOC;?>export/text/callid?data=<?php echo urlencode($pcapjson); ?>');" style="background: transparent;"/>
 <?php  if (isset($flow_from_date)) { ?>
     <input type="button" value="Duration: <?php echo $totdur ?>" style="opacity: 1; background: transparent; background-color: <?php echo $statuscolor; ?>" disabled />
-    <input type="button" value="Expand Search" style="opacity: 1; background: transparent;" onclick="$(this).parent().parent().load('cflow.php?<?php echo $complete_url ?>&full=1');"/>
+    <input type="button" value="Expand Search" style="opacity: 1; background: transparent;" onclick="$(this).parent().parent().load('cflow.php?<?php echo $complete_url ?>&full=1');$('#image<?php echo $winid;?>').attr('src', './images/search.gif');"/>
 <?php } else {  ?>
     <input type="button" value="Duration: <?php echo $totdur ?>" style="opacity: 1; background: transparent; background-color: <?php echo $statuscolor; ?>" disabled />
 <?php   }  ?>
