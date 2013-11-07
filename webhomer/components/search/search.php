@@ -147,9 +147,9 @@ class Component {
                         $totimestamp = strtotime($search['from_date'].' '.$search['from_time'])+(60*($window/2));
                         
                         $search['from_date'] = $timeparam->from_date = date('d-m-Y', $fromtimestamp);
-                        $search['from_time'] = $timeparam->from_time = date('h:i:s', $fromtimestamp);
+                        $search['from_time'] = $timeparam->from_time = date('H:i:s', $fromtimestamp);
                         $search['to_date'] = $timeparam->to_date = date('d-m-Y', $totimestamp);
-                        $search['to_time'] = $timeparam->to_time = date('h:i:s', $totimestamp);
+                        $search['to_time'] = $timeparam->to_time = date('H:i:s', $totimestamp);
                        
                     }
 
