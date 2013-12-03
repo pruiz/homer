@@ -120,7 +120,7 @@ function sipMessage() {
         $msgbody = preg_replace('!\\\015\\\012!',"\n<BR>",$msgbody);
         $msgbody = preg_replace('/'.$row->method.'/', "<font color='red'><b>$row->method</b></font>", $msgbody);
         $msgbody = preg_replace('/'.$row->via_1_branch.'/', "<font color='green'><b>$row->via_1_branch</b></font>", $msgbody);
-        $msgbody = preg_replace('/'.$row->callid.'/', "<font color='blue'><b>$row->callid</b></font>", $msgbody);
+        $msgbody = preg_replace('('.$row->callid.')', "<font color='blue'><b>$row->callid</b></font>", $msgbody);
         $msgbody = preg_replace('/'.$row->from_tag.'/', "<font color='red'><b>$row->from_tag</b></font>", $msgbody);
         $msgbody = "<br><font size=-2>".$msgbody."</font>";
         unset($row->msg);
