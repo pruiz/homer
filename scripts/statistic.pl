@@ -56,7 +56,7 @@ my $to_date = sprintf("'%04d-%02d-%02d %02d:%02d:00'",($nowtime[5]+=1900),(++$no
 my $from_date = sprintf("'%04d-%02d-%02d %02d:%02d:00'",($oldtime[5]+=1900),(++$oldtime[4]),$oldtime[3],$oldtime[2], $oldtime[1]);
 
 #QUERY
-my $mainquery = "FROM ".$mysql_table.$wheredata." WHERE date BETWEEN $from_date AND $to_date";
+my $mainquery = "FROM ".$mysql_table." WHERE date BETWEEN $from_date AND $to_date";
 #My ASR AND NER == 0 at this time;
 $ner = 0;
 $asr = 0;
