@@ -661,7 +661,7 @@ class HTML_ToolBox {
                                         </td>
 					 <td>
                                                 <select name="pcap_match" id="pcap_match" value="" class="ui-select ui-widget ui-state-default ui-corner-all" />
-                                                  <option value="cid" selected>Session-ID</option>
+                                                  <option value="cid[]" selected>Session-ID</option>
                                                   <option value="from_user">From User</option>
                                                   <option value="to_user">To User</option>
                                                 </select>
