@@ -186,7 +186,7 @@ if(isset($cid_array)) {
 	    		foreach ($mynodes[$value]->dbtables as $tablename){
         	  		$query = "SELECT callid FROM ".$tablename." WHERE ".$where." callid_aleg='".$cid."'";
 	          		$cid_aleg = $db->loadResult($query);
-	          		$cid_array[] = $cid_aleg;
+                if(is_array($cid_array)) $cid_array[] = $cid_aleg;	          		
 	          		if (!empty($cid_aleg)){
 	          			break 2;
 	          		}
@@ -196,7 +196,7 @@ if(isset($cid_array)) {
 	    else if (BLEGCID == "b2b") { 
 	    	if (!preg_match("/%/", $value.BLEGTAIL)){/*mysql wildcard % not supported*/
 	          	$cid_aleg = $cid.BLEGTAIL;
-	          	$cid_array[] = $cid_aleg;
+              if(is_array($cid_array)) $cid_array[] = $cid_aleg;	          			          	
 	    	}
             }
 	}	         
