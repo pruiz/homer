@@ -149,6 +149,14 @@ $location = getVar('location', array(0), $_REQUEST, 'array');
 $text = getVar('text', 0, $_REQUEST, 'int');
 
 $cid_array = getVar('cid', NULL, $_REQUEST,'array');
+
+if ( count($location) <= 1 ) {
+        if ( key($location) == 0 && $location[0] == 0 ) {
+                unset($location);
+                $location[0] = key($mynodes);
+        }
+}
+
 if(is_array($cid_array)) $cid = $cid_array[0];
 else $cid = $cid_array;
 
