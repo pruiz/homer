@@ -138,7 +138,7 @@ if (!isset($table)) { $table="sip_capture"; }
 $b2b = getVar('b2b', NULL, $_REQUEST, 'string');
 $from_user = getVar('from_user', NULL, $_REQUEST, 'string');
 $to_user = getVar('to_user', NULL, $_REQUEST, 'string');
-$limit = getVar('limit', NULL, $_REQUEST, 'string');
+$limit = getVar('limit', 100, $_REQUEST, 'int');
 // Get time & date if available
 $flow_from_date = getVar('from_date', NULL, $_REQUEST, 'string');
 $flow_to_date = getVar('to_date', NULL, $_REQUEST, 'string');
