@@ -114,7 +114,9 @@ class SipSearchService implements ISipService
      if(BLEGDETECT == 1) $b2b=1;
 
      $j=$thour+1;     
-     
+   
+     $hint = ""; 
+     $hints = array(); 
      $where = "(`date` BETWEEN '$ft' AND '$tt' )";              
 
      if (property_exists($homer, 'max_records')) $max_records = (int) ($homer->max_records/count($location));
@@ -149,6 +151,10 @@ class SipSearchService implements ISipService
                $callwhere.= $mkey.$eqlike.$mvalue;
            }
 
+           if($key == "callid" || $key == "callid_aleg") {
+		array_push($hints, "callid", "callid_aleg");
+           }
+
 	   if($key == "callid" && $b2b) {
                 if(BLEGCID == "x-cid") $callwhere .= "OR callid_aleg ".$eqlike.$mvalue;
                 else if(BLEGCID == "b2b") {
@@ -162,6 +168,10 @@ class SipSearchService implements ISipService
     }
                    
     if(isset($callwhere)) $where .= " AND ".$callwhere.")";
+
+    if (count($hints) > 0) {
+           $hint = "\n USE INDEX (". implode(",", $hints) .")";
+    }
 
     //$node = sprintf("homer_node%02d.", $value);
     // check if we just need a count of results
@@ -178,7 +188,7 @@ class SipSearchService implements ISipService
              	/* COUNT LIMIT. Use it for BIG BIG TABLES */
              	foreach ($mynodes[$value]->dbtables as $tablename){
              		$query = "SELECT id "
-             				."\n FROM ".$tablename
+             				."\n FROM ".$tablename . $hint
              				."\n WHERE ". $where . $captnode ." LIMIT $limit;";
              		$db->executeQuery($query);
              		
@@ -192,7 +202,7 @@ class SipSearchService implements ISipService
              	$i = 0;
              	foreach ($mynodes[$value]->dbtables as $tablename){
              		$query = "SELECT count(id) as count"
-             				."\n FROM ".$tablename
+             				."\n FROM ".$tablename . $hint
              				."\n WHERE ". $where. $captnode.";";
              		$cnt = $db->loadResult($query);
              		$mynodes[$value]->dbtablescnt[$i] = $cnt;
@@ -254,10 +264,10 @@ class SipSearchService implements ISipService
               for($table_no = $first_table_no; $table_no <= $last_table_no; $table_no++) {
               	 
               	$tablename = $mynodes[$value]->dbtables[$table_no];
-              	 
               
               	$query = "SELECT *,".$tnode.",'".$tablename."' as tablename"
               			."\n FROM ".$tablename
+				.$hint
               			."\n WHERE ". $where . $captnode
               			."\n ORDER BY {$sort} {$sortDirection} "
               			."\n limit {$from[$table_no]}, {$count[$table_no]}";
