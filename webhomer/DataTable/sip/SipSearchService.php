@@ -302,7 +302,9 @@ class SipSearchService implements ISipService
   {
 
      global $db, $mynodes;
-     
+    
+     $hint;
+     $hints = array(); 
      $whereSqlParts = array();
 
      $location = $homer->location;
@@ -354,6 +356,10 @@ class SipSearchService implements ISipService
                if($s == 1) $callwhere.=" AND ";
                $callwhere.= $mkey.$eqlike.$mvalue;
      }
+
+     if($key == "callid" || $key == "callid_aleg") {
+            array_push($hints, "callid", "callid_aleg");
+     }
      
      if($key == "callid" && $b2b) {
      	if(BLEGCID == "x-cid") $callwhere .= "OR callid_aleg ".$eqlike.$mvalue;
@@ -392,6 +398,9 @@ class SipSearchService implements ISipService
     if (isset($whereSqlParts2)) $whereSql .= implode($whereSqlParts2, ' AND ');
 
     //$node = sprintf("homer_node%02d.", $value);
+    if (count($hints) > 0) {
+           $hint = "\n USE INDEX (". implode(",", $hints) .")";
+    }
 
     // check if we just need a count of results
     if($isCount){
@@ -407,7 +416,7 @@ class SipSearchService implements ISipService
               	/* COUNT LIMIT. Use it for BIG BIG TABLES */
               	foreach ($mynodes[$value]->dbtables as $tablename){
               		$query = "SELECT id "
-              				."\n FROM ".$tablename
+              				."\n FROM ".$tablename . $hint
               				."\n WHERE ({$whereSql})". $where . $captnode ." LIMIT $limit;";
               		$db->executeQuery($query);
               		$cnt = $db->getResultCount();
@@ -420,7 +429,7 @@ class SipSearchService implements ISipService
               	$i = 0;
               	foreach ($mynodes[$value]->dbtables as $tablename){
               		$query = "SELECT count(id) as count"
-              				."\n FROM ".$tablename
+              				."\n FROM ".$tablename . $hint
               				."\n WHERE ({$whereSql})". $where . $captnode;
               				$cnt = $db->loadResult($query);
               		$mynodes[$value]->dbtablescnt[$i] = $cnt;
@@ -486,7 +495,7 @@ class SipSearchService implements ISipService
               
               	$tablename = $mynodes[$value]->dbtables[$table_no];
               	$query = "SELECT *,".$tnode.",'".$tablename."' as tablename"
-              			."\n FROM ".$tablename
+              			."\n FROM ".$tablename . $hint
               			."\n WHERE ({$whereSql}) ". $where . $captnode
               			."\n ORDER BY {$sort} {$sortDirection} "
               			."\n LIMIT {$from[$table_no]}, {$count[$table_no]}"
