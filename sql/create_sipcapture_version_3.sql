@@ -61,3 +61,6 @@ CREATE TABLE `sip_capture` (
 PARTITION BY RANGE ( UNIX_TIMESTAMP(`date`) ) (
 PARTITION pmax VALUES LESS THAN (MAXVALUE)
 );
+
+CREATE INDEX callid ON sip_capture(callid);
+CREATE INDEX callid_aleg ON sip_capture(callid_aleg);
