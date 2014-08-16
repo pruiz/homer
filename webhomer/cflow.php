@@ -152,26 +152,29 @@ if(!$db->dbconnect_homer(isset($mynodes[$location[0]]) ? $mynodes[$location[0]] 
 /* CID */
 
 //$b2b = 0;
+$cids_aleg = array();
 
 /* Detect second B-LEG ID and CID style */
 	if($b2b) {
            switch (BLEGCID) {
                default:
-                        $cid_aleg = $cid;
+			array_push($cids_aleg, $cid);
                case "x-cid":
 		               	foreach($location as $value) {
 		               		$db->dbconnect_homer(isset($mynodes[$value]) ? $mynodes[$value] : NULL);
 		               		foreach ($mynodes[$value]->dbtables as $tablename){
 		                        		$query = "SELECT callid FROM ".$tablename
 		                        		."\n WHERE ".$where." callid_aleg='".$cid."'";
-		                        		$cid_aleg = $db->loadResult($query);
-		                        		if (!empty($cid_aleg))
-		                        			break 2;
+		                        		$rows = $db->loadObjectList($query);
+							if (count($rows) > 0) {
+								foreach ($rows as $row)
+									array_push($cids_aleg, $row->callid);
+							}
 		               		}
 		               	}                       			
                         break;		
 	       case "b2b":
-                        	$cid_aleg = $cid.BLEGTAIL;
+                        	array_push($cids_aleg, $cid.BLEGTAIL);
 
            }
 
@@ -187,7 +190,6 @@ $min_ts = 0;
 $statuscall=0;
 $mt_flag = 0;
 if(!isset($where)) $where = "";
-if(!isset($cid_aleg)) $cid_aleg = "";
 
 foreach($location as $value) {
 
@@ -204,9 +206,10 @@ foreach($location as $value) {
 	        	$local_where = $where." ( callid = '".$cid."' )";
 			/* Append B-LEG if set */
 			if (BLEGCID && $full == 1) {
-				
-				$eqlike = preg_match("/%/", $cid_aleg) ? " like " : " = ";
-				$local_where .= " OR (callid".$eqlike."'".$cid_aleg."')";
+				foreach ($cids_aleg as $cid_aleg) {
+					$eqlike = preg_match("/%/", $cid_aleg) ? " like " : " = ";
+					$local_where .= " OR (callid".$eqlike."'".$cid_aleg."')";
+				}
 			}
 	
 				$query = "SELECT *, ".$tnode.",'".$tablename."' as tablename"
